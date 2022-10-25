@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  mysqldb:
+    container_name: mysqldb
+    image: mysql/mysql-server:8.0
+    restart: unless-stopped
+    ports:
+     - 3307:3307
+    environment:
+     - MYSQL_ROOT_PASSWORD=
+     - MYSQL_DATABASE=testdb
+     - MYSQL_USER=root
+     - MYSQL_PASSWORD=
+
+
+  spring_app:
+    image: ghassen007/dataengineering
+    container_name: testspring
+    restart: on-failure
+    environment:
+     - spring.datasource.url=jdbc:mysql://mysqldb:3306/testdb?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    ports:
+     - 8089:8089
+    depends_on:
+     - mysqldb
